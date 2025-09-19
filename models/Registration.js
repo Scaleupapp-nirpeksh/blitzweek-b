@@ -60,6 +60,7 @@ const registrationSchema = new mongoose.Schema({
         'Energy Science and Engineering',
         'Systems and Control Engineering',
         'Technology and Development',
+        'Economics',
         'Other'
       ],
       message: 'Please select a valid branch'
