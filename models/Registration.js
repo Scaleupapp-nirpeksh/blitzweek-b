@@ -4,9 +4,7 @@ const registrationSchema = new mongoose.Schema({
   name: {
     type: String,
     required: [true, 'Name is required'],
-    trim: true,
-    minlength: [2, 'Name must be at least 2 characters long'],
-    maxlength: [100, 'Name cannot exceed 100 characters']
+    trim: true
   },
   ldapId: {
     type: String,
@@ -16,7 +14,7 @@ const registrationSchema = new mongoose.Schema({
     trim: true,
     validate: {
       validator: function(v) {
-        // IITB LDAP email format validation
+        // IITB LDAP email format validation - KEEPING THIS ONE
         return /^[a-zA-Z0-9._%+-]+@iitb\.ac\.in$/.test(v);
       },
       message: 'Please enter a valid IITB email address'
@@ -27,77 +25,23 @@ const registrationSchema = new mongoose.Schema({
     required: [true, 'Roll Number is required'],
     unique: true,
     uppercase: true,
-    trim: true,
-    validate: {
-      validator: function(v) {
-        // IITB Roll Number format: e.g., 21B1234, 22M1234, 23D1234
-        return /^[0-9]{2}[A-Z][0-9]{4,5}$/.test(v);
-      },
-      message: 'Please enter a valid IITB roll number (e.g., 21B1234)'
-    }
+    trim: true
   },
   branch: {
     type: String,
-    required: [true, 'Branch is required'],
-    enum: {
-      values: [
-        'Aerospace Engineering',
-        'Chemical Engineering',
-        'Civil Engineering',
-        'Computer Science and Engineering',
-        'Electrical Engineering',
-        'Engineering Physics',
-        'Environmental Science and Engineering',
-        'Mechanical Engineering',
-        'Metallurgical Engineering and Materials Science',
-        'Biosciences and Bioengineering',
-        'Chemistry',
-        'Earth Sciences',
-        'Mathematics',
-        'Physics',
-        'Climate Studies',
-        'Educational Technology',
-        'Energy Science and Engineering',
-        'Systems and Control Engineering',
-        'Technology and Development',
-        'Economics',
-        'Other'
-      ],
-      message: 'Please select a valid branch'
-    }
+    required: [true, 'Branch is required']
   },
   year: {
     type: String,
-    required: [true, 'Year is required'],
-    enum: {
-      values: ['1st Year', '2nd Year', '3rd Year', '4th Year', '5th Year', 'MTech', 'PhD', 'Other'],
-      message: 'Please select a valid year'
-    }
+    required: [true, 'Year is required']
   },
   interestedEvents: {
     type: [String],
-    required: [true, 'Please select at least one event'],
-    validate: {
-      validator: function(v) {
-        return v && v.length > 0;
-      },
-      message: 'Please select at least one event'
-    },
-    enum: {
-      values: ['ScaleUp Blitz', 'ScaleUp Ignite', 'Both'],
-      message: 'Please select valid events'
-    }
+    required: [true, 'Please select at least one event']
   },
   phoneNumber: {
     type: String,
-    required: false,
-    validate: {
-      validator: function(v) {
-        if (!v) return true; // Optional field
-        return /^[6-9]\d{9}$/.test(v);
-      },
-      message: 'Please enter a valid 10-digit Indian phone number'
-    }
+    required: false
   },
   registrationDate: {
     type: Date,

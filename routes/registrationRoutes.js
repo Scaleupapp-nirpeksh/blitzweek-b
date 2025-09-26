@@ -3,25 +3,21 @@ const router = express.Router();
 const { body } = require('express-validator');
 const registrationController = require('../controllers/registrationController');
 
-// Validation middleware
+// Validation middleware - Keeping IITB email, branch, year, and events validation
 const validateRegistration = [
   body('name')
     .trim()
-    .notEmpty().withMessage('Name is required')
-    .isLength({ min: 2, max: 100 }).withMessage('Name must be between 2 and 100 characters')
-    .matches(/^[a-zA-Z\s]+$/).withMessage('Name can only contain letters and spaces'),
+    .notEmpty().withMessage('Name is required'),
   
   body('ldapId')
     .trim()
     .notEmpty().withMessage('LDAP ID is required')
-    .isEmail().withMessage('Invalid email format')
     .matches(/@iitb\.ac\.in$/i).withMessage('Must be a valid IITB email address')
     .normalizeEmail(),
   
   body('rollNumber')
     .trim()
     .notEmpty().withMessage('Roll Number is required')
-    .matches(/^[0-9]{2}[A-Z][0-9]{4,5}$/i).withMessage('Invalid roll number format (e.g., 21B1234)')
     .toUpperCase(),
   
   body('branch')
@@ -46,6 +42,7 @@ const validateRegistration = [
       'Energy Science and Engineering',
       'Systems and Control Engineering',
       'Technology and Development',
+      'Economics',
       'Other'
     ]).withMessage('Invalid branch'),
   
@@ -67,7 +64,6 @@ const validateRegistration = [
   body('phoneNumber')
     .optional()
     .trim()
-    .matches(/^[6-9]\d{9}$/).withMessage('Invalid Indian phone number')
 ];
 
 // Public routes
