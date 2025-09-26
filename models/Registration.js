@@ -72,12 +72,24 @@ registrationSchema.index({ rollNumber: 1 });
 registrationSchema.index({ registrationDate: -1 });
 registrationSchema.index({ interestedEvents: 1 });
 
-// Generate unique registration number before saving
+// In Registration model - this finds the MAX number, not count
 registrationSchema.pre('save', async function(next) {
   if (!this.registrationNumber) {
-    const count = await mongoose.model('Registration').countDocuments();
+    // Find the last registration by sorting
+    const lastReg = await mongoose.model('Registration')
+      .findOne()
+      .sort('-registrationNumber')
+      .select('registrationNumber');
+    
+    let nextNum = 1;
+    if (lastReg && lastReg.registrationNumber) {
+      // Extract the number from BW20250266 format
+      const currentNum = parseInt(lastReg.registrationNumber.slice(6));
+      nextNum = currentNum + 1;
+    }
+    
     const year = new Date().getFullYear();
-    this.registrationNumber = `BW${year}${String(count + 1).padStart(4, '0')}`;
+    this.registrationNumber = `BW${year}${String(nextNum).padStart(4, '0')}`;
   }
   next();
 });
